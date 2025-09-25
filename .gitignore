@@ -1,0 +1,15 @@
+.vscode/
+
+# build artifacts
+build/
+_cache/
+r2r/
+
+.DS_Store
+
+*.dsk
+*.atr
+*.exe
+*.com
+
+*~

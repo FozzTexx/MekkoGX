@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          # - adam
+          # - apple2
+          # - atari
+          # - c64
+          - coco
+          # - msdos
+
+    container:
+      image: fozztexx/defoogi:1.4.2
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: make ${{ matrix.platform }}/r2r
+
+      # PR case: normal artifact upload
+      - name: Upload artifact for ${{ matrix.platform }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}
+          path: r2r/${{ matrix.platform }}/**
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: r2r-all
+
+      - name: Create or update "latest" release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clear old release assets
+        run: |
+          echo "Fetching existing assets for release 'latest'..."
+          assets=$(gh release view latest --json assets -q '.assets[].name')
+          for asset in $assets; do
+            echo "Deleting $asset..."
+            gh release delete-asset latest "$asset" -y
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload all platform artifacts as zips
+        run: |
+          SHORT_HASH=$(git rev-parse --short HEAD)
+          TMP_DIR=$(mktemp -d)
+          REPO_NAME=$(basename "${GITHUB_REPOSITORY}")
+          for dir in r2r-all/* ; do
+            PLATFORM=$(basename "${dir}")
+            PLATFORM_ID="${REPO_NAME}-${PLATFORM}-${SHORT_HASH}"
+            echo "Zipping ${PLATFORM}..."
+            cp -r "${dir}" "${TMP_DIR}/${PLATFORM_ID}"
+            ZIP_FILE="${PLATFORM_ID}.zip"
+            (cd "${TMP_DIR}" && zip -r "${TMP_DIR}/${ZIP_FILE}" "${PLATFORM_ID}")
+            echo "Uploading ${ZIP_FILE}..."
+            gh release upload latest "${TMP_DIR}/${ZIP_FILE}" --clobber
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
