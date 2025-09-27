@@ -8,18 +8,27 @@ CFLAGS += --intdir=$(OBJ_DIR)
 AFLAGS +=
 LDFLAGS +=
 
-ifdef FUJINET_LIB_INCLUDE
-  CFLAGS += -I$(FUJINET_LIB_INCLUDE)
-endif
-ifdef FUJINET_LIB_DIR
-  LIBS += -L$(FUJINET_LIB_DIR) -l$(FUJINET_LIB_LDLIB)
-endif
-
 # Needed because of using sed to strip ANSI color escape sequences
 SHELL = /bin/bash -o pipefail
 
 define strip-ansi
   sed -e 's/'$$'\033''[[][0-9][0-9]*m//g'
+endef
+
+define include-dir-flag
+  -I$1
+endef
+
+define asm-include-dir-flag
+  -I$1
+endef
+
+define library-dir-flag
+  -L$1
+endef
+
+define library-flag
+  -l$1
 endef
 
 define link-bin

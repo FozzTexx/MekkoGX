@@ -5,7 +5,7 @@ MWD := $(realpath $(dir $(lastword $(MAKEFILE_LIST)))..)
 include $(MWD)/common.mk
 include $(MWD)/toolchains/cc65.mk
 
-r2r:: $(DISK) $(R2R_POSTDEPS)
+r2r:: $(DISK) $(R2R_EXTRA_DEPS_$(PLATFORM_UC))
 	make -f $(PLATFORM_MK) $(PLATFORM)/r2r-post
 
 PRODOS_VERSION = 2.4.3
@@ -13,7 +13,7 @@ PRODOS8_DISK := $(CACHE_PLATFORM)/PRODOS8-$(PRODOS_VERSION).po
 CC65_UTILS_DIR := $(shell cl65 --print-target-path --target $(PLATFORM))/$(PLATFORM)/util
 LOADER_SYSTEM := loader.system
 
-$(DISK): $(EXECUTABLE) $(PRODOS8_DISK) $(DISK_POSTDEPS) | $(R2R_PD)
+$(DISK): $(EXECUTABLE) $(PRODOS8_DISK) $(DISK_EXTRA_DEPS_$(PLATFORM_UC)) | $(R2R_PD)
 	acx create -d $@ --format $(PRODOS8_DISK) --prodos --size=140kb --name=$(PRODUCT)
 	ac -as $@ $(PRODUCT) < $<
 	ac -p $@ $(PRODUCT).SYSTEM SYS 0x2000 < $(CC65_UTILS_DIR)/$(LOADER_SYSTEM)

@@ -7,12 +7,21 @@ CFLAGS += -0 -bt=dos -ms -s -osh -zu
 AFLAGS +=
 LDFLAGS += SYSTEM dos OPTION MAP LIBPATH $(FUJINET_LIB_DIR)
 
-ifdef FUJINET_LIB_INCLUDE
-  CFLAGS += -I$(FUJINET_LIB_INCLUDE)
-endif
-ifdef FUJINET_LIB_DIR
-  LIBS += $(FUJINET_LIB_LDLIB)
-endif
+define include-dir-flag
+  -I$1
+endef
+
+define asm-include-dir-flag
+  -I$1
+endef
+
+define library-dir-flag
+  -L$1
+endef
+
+define library-flag
+  $1
+endef
 
 define link-bin
   $(LD) $(LDFLAGS) \

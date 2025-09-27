@@ -162,15 +162,6 @@ class LibLocator:
     return filename
 
   def getVersion(self):
-    if self.MV.FUJINET_LIB_DIR:
-      rxm = self.findLibrary(os.listdir(self.MV.FUJINET_LIB_DIR))
-      if rxm:
-        if len(rxm.groups()) >= 2:
-          self.MV.FUJINET_LIB_VERSION = rxm.group(2)
-        self.MV.FUJINET_LIB_FILE = rxm.group(0)
-        return
-      raise ValueError("No library found")
-
     if self.MV.FUJINET_LIB_ZIP:
       with zipfile.ZipFile(self.MV.FUJINET_LIB_ZIP, "r") as zf:
         rxm = self.findLibrary(zf.namelist())
@@ -180,6 +171,24 @@ class LibLocator:
           return
 
       raise ValueError("Which file is the newest?")
+
+    if not self.MV.FUJINET_LIB_DIR:
+      cached = self.findCacheDir()
+      if cached:
+        self.MV.FUJINET_LIB_DIR = cached
+
+    if self.MV.FUJINET_LIB_DIR:
+      rxm = self.findLibrary(os.listdir(self.MV.FUJINET_LIB_DIR))
+      if rxm:
+        if len(rxm.groups()) >= 2:
+          self.MV.FUJINET_LIB_VERSION = rxm.group(2)
+        self.MV.FUJINET_LIB_FILE = rxm.group(0)
+        return
+      raise ValueError("No library found")
+
+    # No version was specified, so any version is fine
+    if self.MV.FUJINET_LIB_VERSION:
+      return
 
     latest_url = f"{GITHUB_API}/{FUJINET_REPO}/releases/latest"
     with urllib.request.urlopen(latest_url) as response:
@@ -196,6 +205,16 @@ class LibLocator:
 
     self.MV.FUJINET_LIB_VERSION = rxm.group(1)
     return
+
+  def findCacheDir(self):
+    pattern = fr"{VERSION_NUM}-{self.PLATFORM}"
+    if not os.path.isdir(FUJINET_CACHE_DIR):
+      return None
+    for path in os.listdir(FUJINET_CACHE_DIR):
+      rxm = re.match(pattern, path)
+      if rxm:
+        return os.path.join(FUJINET_CACHE_DIR, path)
+    return None
 
   def getDirectory(self):
     global FUJINET_CACHE_DIR

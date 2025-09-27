@@ -8,12 +8,21 @@ CFLAGS += +coleco -subtype=adam
 AFLAGS +=
 LDFLAGS += +coleco -subtype=adam
 
-ifdef FUJINET_LIB_INCLUDE
-  CFLAGS += -I$(FUJINET_LIB_INCLUDE)
-endif
-ifdef FUJINET_LIB_DIR
-  LIBS += -L$(FUJINET_LIB_DIR) -l$(FUJINET_LIB_LDLIB)
-endif
+define include-dir-flag
+  -I$1
+endef
+
+define asm-include-dir-flag
+  -I$1
+endef
+
+define library-dir-flag
+  -L$1
+endef
+
+define library-flag
+  -l$1
+endef
 
 define link-bin
   $(LD) $(LDFLAGS) $2 $(LIBS) -o $1
