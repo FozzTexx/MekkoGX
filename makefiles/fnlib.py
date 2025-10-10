@@ -168,9 +168,9 @@ class LibLocator:
     return filename
 
   def setPlatformVersion(self, rxm):
-    if len(rxm.groups()) >= 2:
+    if len(rxm.groups()) >= 1:
       self.MV.FUJINET_LIB_PLATFORM = rxm.group(1)
-    if len(rxm.groups()) >= 3:
+    if len(rxm.groups()) >= 2:
       self.MV.FUJINET_LIB_VERSION = rxm.group(2)
     return
 
