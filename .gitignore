@@ -13,3 +13,5 @@ r2r/
 *.com
 
 *~
+*.orig
+*.rej
