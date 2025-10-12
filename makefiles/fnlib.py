@@ -16,7 +16,7 @@ FUJINET_CACHE_DIR = os.path.join(CACHE_DIR, "fujinet-lib")
 VERSION_NUM_RE = r"([0-9]+[.][0-9]+[.][0-9]+)"
 VERSION_NAME_RE = fr"v?{VERSION_NUM_RE}"
 LDLIB_REGEX = r"lib(.*)[.]a$"
-LDLIB_PLATFORMS = ["coco", "msdos"]
+LDLIB_PLATFORMS = ["coco", "dragon", "msdos"]
 
 def build_argparser():
   parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -77,15 +77,15 @@ class LibLocator:
 
     self.PLATFORM = PLATFORM
     self.combos = self.combosToDict(COMBOS)
+    self.possiblePlatforms = [self.PLATFORM, *self.combos.get(self.PLATFORM, [])]
 
     # Several possible library filename patterns:
     #   - fujinet-coco-4.7.6.lib
     #   - fujinet.apple2.lib
     #   - fujinet.lib.c64
     #   - libfujinet.coco.a
-    platforms = [self.PLATFORM, *self.combos.get(self.PLATFORM, [])]
     self.LIBRARY_REGEX = []
-    for platform in platforms:
+    for platform in self.possiblePlatforms:
       self.LIBRARY_REGEX.extend([
         fr"fujinet[-.]({platform})(-{VERSION_NUM_RE})?[.]lib$",
         fr"fujinet[.]lib[.]({platform})$",
@@ -119,6 +119,9 @@ class LibLocator:
 
     if not self.MV.FUJINET_LIB_INCLUDE:
       self.getInclude()
+
+    if not self.MV.FUJINET_LIB_PLATFORM:
+      self.MV.FUJINET_LIB_PLATFORM = self.PLATFORM
 
     self.MV.FUJINET_LIB_FILE = self.fixupLibraryFilename(self.MV.FUJINET_LIB_FILE)
     self.MV.FUJINET_LIB_LDLIB = self.MV.FUJINET_LIB_FILE
@@ -157,10 +160,10 @@ class LibLocator:
 
     if self.PLATFORM in LDLIB_PLATFORMS:
       if not re.match(LDLIB_REGEX, filename):
-        symlink_file = f"libfujinet-{self.PLATFORM}{version}.a"
+        symlink_file = f"libfujinet-{self.MV.FUJINET_LIB_PLATFORM}{version}.a"
 
     elif not filename.endswith(".lib"):
-      symlink_file = f"fujinet-{self.PLATFORM}{version}.lib"
+      symlink_file = f"fujinet-{self.MV.FUJINET_LIB_PLATFORM}{version}.lib"
 
     if symlink_file:
       symlink_path = os.path.join(self.MV.FUJINET_LIB_DIR, symlink_file)
@@ -240,25 +243,29 @@ class LibLocator:
     global FUJINET_CACHE_DIR
     os.makedirs(self.MV.FUJINET_LIB_DIR, exist_ok=True)
 
-    self.MV.FUJINET_LIB_FILE = f"fujinet-{self.PLATFORM}-{self.MV.FUJINET_LIB_VERSION}.lib"
-    if not os.path.exists(os.path.join(self.MV.FUJINET_LIB_DIR, self.MV.FUJINET_LIB_FILE)):
-      zip_path = f"fujinet-lib-{self.PLATFORM}-{self.MV.FUJINET_LIB_VERSION}.zip"
+    for platform in self.possiblePlatforms:
+      self.MV.FUJINET_LIB_FILE = f"fujinet-{platform}-{self.MV.FUJINET_LIB_VERSION}.lib"
+      if not os.path.exists(os.path.join(self.MV.FUJINET_LIB_DIR, self.MV.FUJINET_LIB_FILE)):
+        zip_path = f"fujinet-lib-{platform}-{self.MV.FUJINET_LIB_VERSION}.zip"
 
-      if not self.MV.FUJINET_LIB_ZIP:
-        self.MV.FUJINET_LIB_ZIP = os.path.join(FUJINET_CACHE_DIR, zip_path)
+        if not self.MV.FUJINET_LIB_ZIP:
+          self.MV.FUJINET_LIB_ZIP = os.path.join(FUJINET_CACHE_DIR, zip_path)
 
-      if not os.path.exists(self.MV.FUJINET_LIB_ZIP):
-        release_url = f"{GITHUB_URL}/{FUJINET_REPO}/releases/download" \
-          f"/v{self.MV.FUJINET_LIB_VERSION}/{zip_path}"
-        try:
-          urllib.request.urlretrieve(release_url, self.MV.FUJINET_LIB_ZIP)
-        except:
-          error_exit("Unable to download FujiNet library from", release_url)
+        if not os.path.exists(self.MV.FUJINET_LIB_ZIP):
+          release_url = f"{GITHUB_URL}/{FUJINET_REPO}/releases/download" \
+            f"/v{self.MV.FUJINET_LIB_VERSION}/{zip_path}"
+          try:
+            urllib.request.urlretrieve(release_url, self.MV.FUJINET_LIB_ZIP)
+          except:
+            continue
 
-      with zipfile.ZipFile(self.MV.FUJINET_LIB_ZIP, "r") as zf:
-        zf.extractall(self.MV.FUJINET_LIB_DIR)
+        with zipfile.ZipFile(self.MV.FUJINET_LIB_ZIP, "r") as zf:
+          zf.extractall(self.MV.FUJINET_LIB_DIR)
 
-    return
+        return
+
+      error_exit("Unable to download FujiNet library from", release_url)
+      return
 
   def gitClone(self, url):
     global FUJINET_CACHE_DIR
@@ -277,8 +284,8 @@ class LibLocator:
         cmd.extend(["-b", branch])
       subprocess.run(cmd, cwd=FUJINET_CACHE_DIR, check=True)
 
-    possibleOutput = ["build", f"r2r/{self.PLATFORM}",
-                      *[f"r2r/{p}" for p in self.combos.get(self.PLATFORM, [])]]
+    possibleOutput = ["build", *[f"r2r/{p}"
+                                 for p in self.possiblePlatforms.get(self.PLATFORM, [])]]
     self.findLibraryDir(repoDir, possibleOutput)
     if not self.MV.FUJINET_LIB_FILE:
       cmd = ["make", ]
@@ -317,6 +324,8 @@ class LibLocator:
 
   def printMakeVariables(self):
     self.MV.printValues()
+    if self.MV.FUJINET_LIB_LDLIB:
+      print(f"CFLAGS_EXTRA_{self.PLATFORM.upper()}+=-DUSING_FUJINET_LIB")
     return
 
   @staticmethod

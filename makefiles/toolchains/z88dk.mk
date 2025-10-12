@@ -6,7 +6,7 @@ AR_DEFAULT ?= $(AS_DEFAULT)
 include $(MWD)/tc-common.mk
 
 CFLAGS +=
-AFLAGS +=
+ASFLAGS +=
 LDFLAGS +=
 
 define include-dir-flag
@@ -38,5 +38,5 @@ define compile
 endef
 
 define assemble
-  $(AS) $(AFLAGS) -o=$1 $2
+  $(AS) $(ASFLAGS) -o=$1 $2
 endef

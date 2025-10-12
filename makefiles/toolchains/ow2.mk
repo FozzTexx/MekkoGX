@@ -4,7 +4,7 @@ LD_DEFAULT ?= wlink OPTION quiet
 
 include $(MWD)/tc-common.mk
 CFLAGS += -0 -bt=dos -ms -s -osh -zu
-AFLAGS +=
+ASFLAGS +=
 LDFLAGS += SYSTEM dos OPTION MAP LIBPATH $(FUJINET_LIB_DIR)
 
 define include-dir-flag
@@ -39,5 +39,5 @@ define compile
 endef
 
 define assemble
-  $(AS) -c $(AFLAGS) -o $1 $2 2>&1
+  $(AS) -c $(ASFLAGS) -o $1 $2 2>&1
 endef

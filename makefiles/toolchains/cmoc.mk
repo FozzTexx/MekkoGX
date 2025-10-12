@@ -6,7 +6,7 @@ AR_DEFAULT = lwar
 include $(MWD)/tc-common.mk
 
 CFLAGS += --intdir=$(OBJ_DIR)
-AFLAGS +=
+ASFLAGS +=
 LDFLAGS +=
 
 # Needed because of using sed to strip ANSI color escape sequences
@@ -45,5 +45,5 @@ define compile
 endef
 
 define assemble
-  $(AS) -c $(AFLAGS) -o $1 $2 2>&1 | $(strip-ansi) | sed -e 's/^\(.*\)(\([0-9][0-9]*\)) :/\1:\2:/'
+  $(AS) -c $(ASFLAGS) -o $1 $2 2>&1 | $(strip-ansi) | sed -e 's/^\(.*\)(\([0-9][0-9]*\)) :/\1:\2:/'
 endef

@@ -6,7 +6,7 @@ AR_DEFAULT ?= ar65
 include $(MWD)/tc-common.mk
 
 CFLAGS += -O --cpu 6502
-AFLAGS += --cpu 6502
+ASFLAGS += --cpu 6502
 LDFLAGS +=
 
 define include-dir-flag
@@ -38,5 +38,5 @@ define compile
 endef
 
 define assemble
-  $(AS) -l $(basename $1).lst -c $(AFLAGS) -t $(PLATFORM) -o $1 $2
+  $(AS) -l $(basename $1).lst -c $(ASFLAGS) -t $(PLATFORM) -o $1 $2
 endef
