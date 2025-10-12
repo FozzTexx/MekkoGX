@@ -24,7 +24,9 @@ FUJINET_LIB =
 # Format: platform+=combo1,combo2
 PLATFORM_COMBOS = \
   c64+=commodore \
-  atarixe+=atari
+  atarixe+=atari \
+  msxrom+=msx \
+  msxdos+=msx
 
 include makefiles/toplevel-rules.mk
 

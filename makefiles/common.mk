@@ -138,8 +138,14 @@ else
 
   endef
   $(eval $(subst |,$(_newline),$(shell PLATFORM=$(PLATFORM) CACHE_DIR=$(CACHE_DIR) \
-      PLATFORM_COMBOS="$(PLATFORM_COMBOS)" $(MWD)/fnlib.py $(FUJINET_LIB) | tr '\n' '|')))
+      PLATFORM_COMBOS="$(PLATFORM_COMBOS)" $(MWD)/fnlib.py \
+        $(if $(FUJINET_LIB_OPTIONAL),--skip-if-missing) \
+        $(FUJINET_LIB) | tr '\n' '|')))
   ifeq ($(strip $(FUJINET_LIB_LDLIB)),)
-    $(error fujinet-lib not available)
+    ifeq ($(FUJINET_LIB_OPTIONAL),)
+      $(error fujinet-lib not available)
+    else
+      $(info fujinet-lib not available, but skipping because FUJINET_LIB_SKIP_MISSING is set)
+    endif
   endif
 endif # FUJINET_LIB

@@ -22,7 +22,8 @@ def build_argparser():
   parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument("file", nargs="?", help="input file")
   parser.add_argument("--platform", help="platform building for")
-  parser.add_argument("--flag", action="store_true", help="flag to do something")
+  parser.add_argument("--skip-if-missing", action="store_true",
+                      help="don't error if fujinet-lib isn't available")
   return parser
 
 class MakeVariables:
@@ -52,7 +53,7 @@ class MakeVariables:
     return
 
 class LibLocator:
-  def __init__(self, FUJINET_LIB, PLATFORM, COMBOS):
+  def __init__(self, FUJINET_LIB, PLATFORM, COMBOS, skipIfMissing=False):
     """
     FUJINET_LIB can be
       - a version number such as 4.7.4
@@ -61,6 +62,8 @@ class LibLocator:
       - a URL to a git repo
       - empty
     """
+
+    self.skipIfMissing = skipIfMissing
 
     self.MV = MakeVariables([
       "FUJINET_LIB_DIR",
@@ -193,6 +196,8 @@ class LibLocator:
       if rxm:
         self.MV.FUJINET_LIB_FILE = rxm.group(0)
         return
+      if self.skipIfMissing:
+        exit(0)
       error_exit(f"No library found for \"{self.PLATFORM}\"")
 
     # No version was specified, so any version is fine
@@ -316,6 +321,9 @@ class LibLocator:
 
   @staticmethod
   def combosToDict(combos):
+    if not combos:
+      return {}
+
     comboDict = {}
     for part in combos.split():
       if "+=" not in part:
@@ -356,7 +364,7 @@ def main():
     CACHE_DIR = env_cache_dir
     FUJINET_CACHE_DIR = os.path.join(CACHE_DIR, os.path.basename(FUJINET_CACHE_DIR))
 
-  fujinetLib = LibLocator(FUJINET_LIB, PLATFORM, PLATFORM_COMBOS)
+  fujinetLib = LibLocator(FUJINET_LIB, PLATFORM, PLATFORM_COMBOS, args.skip_if_missing)
   fujinetLib.printMakeVariables()
 
   return
