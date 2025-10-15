@@ -284,8 +284,7 @@ class LibLocator:
         cmd.extend(["-b", branch])
       subprocess.run(cmd, cwd=FUJINET_CACHE_DIR, check=True)
 
-    possibleOutput = ["build", *[f"r2r/{p}"
-                                 for p in self.possiblePlatforms.get(self.PLATFORM, [])]]
+    possibleOutput = ["build", *[f"r2r/{p}" for p in self.possiblePlatforms]]
     self.findLibraryDir(repoDir, possibleOutput)
     if not self.MV.FUJINET_LIB_FILE:
       cmd = ["make", ]
@@ -305,7 +304,6 @@ class LibLocator:
             raise ValueError("What platform?", rxm)
           self.MV.FUJINET_LIB_FILE = rxm.group(0)
           return rxm
-    raise ValueError("No library dir")
     return None
 
   def getInclude(self):
