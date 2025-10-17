@@ -33,11 +33,11 @@ define link-lib
 endef
 
 define link-bin
-  $(LD) -o $1 $(LDFLAGS) $2 $(LIBS) 2>&1
+  $(LD) -o $1 $(LDFLAGS) $2 $(LIBS)
 endef
 
 define compile
-  $(CC) -c $(CFLAGS) --deps=$(OBJ_DIR)/$(basename $(notdir $2)).d -o $1 $2 2>&1
+  $(CC) -c $(CFLAGS) --deps=$(OBJ_DIR)/$(basename $(notdir $2)).d -o $1 $2
 endef
 
 define assemble
