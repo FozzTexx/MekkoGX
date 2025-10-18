@@ -346,7 +346,6 @@ class LibLocator:
 
 # Print errors to stderr so that `make` doesn't try to interpret them in `$(eval)`
 def error_exit(*args):
-  raise ValueError(*args)
   print(*args, file=sys.stderr)
   exit(1)
 
