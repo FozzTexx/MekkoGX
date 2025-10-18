@@ -8,7 +8,15 @@ PLATFORM := $(basename $(notdir $(lastword $(PLATFORM_MK))))
 PLATFORM_UC := $(shell echo "$(PLATFORM)" | tr '[:lower:]' '[:upper:]')
 $(info Building for PLATFORM=$(PLATFORM))
 
+# Add GIT_VERSION macro define to CFLAGS, includes tag if available,
+# short commit hash, appends '*' if changes haven't been commited
+CFLAGS += -DGIT_VERSION='\"$(shell git rev-parse --short HEAD)$(shell git status --porcelain | grep -q '^[ MADRCU]' && echo '*')\"'
+
 include $(MWD)/../Makefile
+
+# Add GIT_VERSION macro define to CFLAGS, includes tag if available,
+# short commit hash, appends '*' if changes haven't been commited
+CFLAGS += -DGIT_VERSION='\"$(shell git rev-parse --short HEAD)$(shell git status --porcelain | grep -q '^[ MADRCU]' && echo '*')\"'
 
 IS_LIBRARY := $(if $(filter %.lib,$(PRODUCT)),1,0)
 ifeq ($(IS_LIBRARY),1)
@@ -74,7 +82,6 @@ $(BUILD_EXEC):: $(OBJS) $(EXECUTABLE_EXTRA_DEPS_$(PLATFORM_UC)) | $(R2R_PD)
 	$(call link-bin,$@,$(OBJS))
 	@$(MAKE) -f $(PLATFORM_MK) $(PLATFORM)/executable-post
 
-$(info LIBRARY=$(BUILD_LIB))
 $(BUILD_LIB):: $(OBJS) $(LIBRARY_EXTRA_DEPS_$(PLATFORM_UC)) | $(R2R_PD)
 	$(call link-lib,$@,$(OBJS))
 	@$(MAKE) -f $(PLATFORM_MK) $(PLATFORM)/library-post
