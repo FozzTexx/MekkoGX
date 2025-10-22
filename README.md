@@ -1,9 +1,10 @@
 # MekkoGX
 
-MekkoGX is a cross-platform build template for retro and classic
-computers. It provides a collection of modular Makefiles and a
-top-level template project to simplify compiling, linking, and
-building disk images across multiple platforms.
+[MekkoGX](https://github.com/fozzTexx/MekkoGX) is a cross-platform
+build template for retro and classic computers. It provides a
+collection of modular Makefiles and a top-level template project to
+simplify compiling, linking, and building disk images across multiple
+platforms.
 
 A major feature is **FujiNet-lib integration**. You can point
 `FUJINET_LIB` to a version, a directory, a zip archive, or a git

@@ -1,14 +1,20 @@
-# Makefile Framework
+# MekkoGX Modular Makefile Framework
 
-This directory provides a modular framework of Makefiles.
+[MekkoGX](https://github.com/fozzTexx/MekkoGX) is a cross-platform
+build template for retro and classic computers. It provides a
+collection of modular Makefiles and a top-level template project to
+simplify compiling, linking, and building disk images across multiple
+platforms.
 
 The main goal is to make it easy to:
 
-* Add new computer platforms by dropping in a new
-  platforms/<platform>.mk file.
-* Avoid per-project hacks inside platform makefiles.
-* Keep all project-specific customization in the top-level Makefile,
-  where it’s visible and easy to maintain.
+* Easily switch between different FUJINET_LIB versions by setting a
+  single variable (supports directories, releases, or Git URLs).
+* Keep platforms and toolchains fully modular: each uses a small .mk
+  file with shared logic in common.mk and tc-common.mk, making it
+  simple to add new platforms or toolchains.
+* **Keep all project-specific customization in the top-level Makefile,
+  where it’s visible and easy to maintain.**
 
 Think of this as a library of Makefiles.
 
