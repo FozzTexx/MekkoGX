@@ -30,8 +30,8 @@ developers don’t have installed or don’t want to use.
 - One-off customization by passing variable definitions on the `make`
   command line, allowing developers to tweak a single build without
   editing the Makefile
-- Post-build hooks to modify executables, disk images, or r2r outputs
-  without changing reusable makefiles
+- Post-build hooks to modify executables, disk images, or r2r (Ready 2
+  Run) outputs without changing reusable makefiles
 - GitHub CI builds for configured platforms automatically
 
 ## Getting Started

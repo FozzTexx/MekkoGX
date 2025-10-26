@@ -123,7 +123,7 @@ With `SRC_DIRS = src src/%PLATFORM%`, building for `c64` would expand `%PLATFORM
 - `src/commodore`
 - `src/eightbit`
 
-### The `r2r` Target
+### The `r2r` "Ready 2 Run" Target
 
 The `r2r` target is the **default build output** for a platform. It
 will always build the platform’s executable. For some platforms, it
