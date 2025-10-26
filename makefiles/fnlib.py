@@ -283,13 +283,13 @@ class LibLocator:
       cmd = ["git", "clone", url]
       if branch:
         cmd.extend(["-b", branch])
-      subprocess.run(cmd, cwd=FUJINET_CACHE_DIR, check=True)
+      subprocess.run(cmd, cwd=FUJINET_CACHE_DIR, check=True, stdout=sys.stderr)
 
     possibleOutput = ["build", *[f"r2r/{p}" for p in self.possiblePlatforms]]
     self.findLibraryDir(repoDir, possibleOutput)
     if not self.MV.FUJINET_LIB_FILE:
       cmd = ["make", ]
-      subprocess.run(cmd, cwd=repoDir, check=True)
+      subprocess.run(cmd, cwd=repoDir, check=True, stdout=sys.stderr)
       self.findLibraryDir(repoDir, possibleOutput)
 
     return
