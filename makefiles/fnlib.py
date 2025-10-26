@@ -16,7 +16,7 @@ FUJINET_CACHE_DIR = os.path.join(CACHE_DIR, "fujinet-lib")
 VERSION_NUM_RE = r"([0-9]+[.][0-9]+[.][0-9]+)"
 VERSION_NAME_RE = fr"v?{VERSION_NUM_RE}"
 LDLIB_REGEX = r"lib(.*)[.]a$"
-LDLIB_PLATFORMS = ["coco", "dragon", "msdos"]
+LDLIB_PLATFORMS = ["coco", "dragon"]
 
 def build_argparser():
   parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
