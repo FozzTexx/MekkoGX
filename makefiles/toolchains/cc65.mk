@@ -9,6 +9,8 @@ CFLAGS += -O --cpu 6502
 ASFLAGS += --cpu 6502
 LDFLAGS +=
 
+CFLAGS += -DGIT_VERSION='"$(GIT_VERSION)"'
+
 define include-dir-flag
   --include-dir $1
 endef
