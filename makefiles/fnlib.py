@@ -87,7 +87,7 @@ class LibLocator:
     self.LIBRARY_REGEX = []
     for platform in self.possiblePlatforms:
       self.LIBRARY_REGEX.extend([
-        fr"fujinet[-.]({platform})-({VERSION_NUM_RE})?[.]lib$",
+        fr"fujinet[-.]({platform})(-{VERSION_NUM_RE})?[.]lib$",
         fr"fujinet[.]lib[.]({platform})$",
         fr"libfujinet[.]({platform})[.]a$",
       ])
@@ -177,8 +177,8 @@ class LibLocator:
   def setPlatformVersion(self, rxm):
     if len(rxm.groups()) >= 1:
       self.MV.FUJINET_LIB_PLATFORM = rxm.group(1)
-    if len(rxm.groups()) >= 2:
-      self.MV.FUJINET_LIB_VERSION = rxm.group(2)
+    if len(rxm.groups()) >= 3:
+      self.MV.FUJINET_LIB_VERSION = rxm.group(3)
     return
 
   def getVersion(self):
