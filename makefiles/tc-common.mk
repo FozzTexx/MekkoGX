@@ -16,15 +16,13 @@ LD := $(LD_$(TOOLCHAIN_UC))
 AR := $(AR_$(TOOLCHAIN_UC))
 PC := $(PC_$(TOOLCHAIN_UC))
 
-EXTRA_INCLUDE_$(TOOLCHAIN_UC) += $(EXTRA_INCLUDE) $(EXTRA_INCLUDE_$(PLATFORM_UC))
 CFLAGS += $(CFLAGS_EXTRA_$(TOOLCHAIN_UC)) $(CFLAGS_EXTRA_$(PLATFORM_UC))
 ASFLAGS += $(ASFLAGS_EXTRA_$(TOOLCHAIN_UC)) $(ASFLAGS_EXTRA_$(PLATFORM_UC))
 LDFLAGS += $(LDFLAGS_EXTRA_$(TOOLCHAIN_UC)) $(LDFLAGS_EXTRA_$(PLATFORM_UC))
 
-CFLAGS += $(foreach incdir,$(EXTRA_INCLUDE),$(call include-dir-flag,$(incdir)))
-CFLAGS += $(foreach incdir,$(EXTRA_INCLUDE_$(PLATFORM_UC)),$(call include-dir-flag,$(incdir)))
-ASFLAGS += $(foreach incdir,$(EXTRA_INCLUDE),$(call asm-include-dir-flag,$(incdir)))
-ASFLAGS += $(foreach incdir,$(EXTRA_INCLUDE_$(PLATFORM_UC)),$(call asm-include-dir-flag,$(incdir)))
+EXTRA_INCLUDE_$(TOOLCHAIN_UC) += $(EXTRA_INCLUDE) $(EXTRA_INCLUDE_$(PLATFORM_UC))
+CFLAGS += $(foreach incdir,$(EXTRA_INCLUDE_$(TOOLCHAIN_UC)),$(call include-dir-flag,$(incdir)))
+ASFLAGS += $(foreach incdir,$(EXTRA_INCLUDE_$(TOOLCHAIN_UC)),$(call asm-include-dir-flag,$(incdir)))
 
 ifdef FUJINET_LIB_INCLUDE
   CFLAGS += $(call include-dir-flag,$(FUJINET_LIB_INCLUDE))

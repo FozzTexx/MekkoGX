@@ -64,6 +64,8 @@ expand_platform_pattern = \
 
 # The fully expanded list of source directories
 SRC_DIRS_EXPANDED := $(call expand_platform_pattern,$(SRC_DIRS))
+INCLUDE_DIRS_EXPANDED := $(call expand_platform_pattern,$(INCLUDE_DIRS))
+EXTRA_INCLUDE += $(INCLUDE_DIRS_EXPANDED)
 
 # Find all the CFILES and AFILES
 CFILES := $(foreach dir,$(SRC_DIRS_EXPANDED),$(wildcard $(dir)/*.c))
