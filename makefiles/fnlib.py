@@ -16,6 +16,8 @@ FUJINET_CACHE_DIR = os.path.join(CACHE_DIR, "fujinet-lib")
 VERSION_NUM_RE = r"([0-9]+[.][0-9]+[.][0-9]+)"
 VERSION_NAME_RE = fr"v?{VERSION_NUM_RE}"
 LDLIB_REGEX = r"lib(.*)[.]a$"
+
+# FIXME - this is really toolchains, not platforms
 LDLIB_PLATFORMS = ["coco", "dragon"]
 
 def build_argparser():
@@ -270,7 +272,7 @@ class LibLocator:
 
         return
 
-      error_exit("Unable to download FujiNet library from", release_url)
+      #error_exit("Unable to download FujiNet library from", release_url)
       return
 
   def gitClone(self, url):
