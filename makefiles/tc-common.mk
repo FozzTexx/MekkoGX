@@ -30,4 +30,3 @@ endif
 ifdef FUJINET_LIB_DIR
   LIBS = $(call library-dir-flag,$(FUJINET_LIB_DIR)) $(call library-flag,$(FUJINET_LIB_LDLIB))
 endif
-
