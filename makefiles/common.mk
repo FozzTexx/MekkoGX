@@ -2,6 +2,20 @@ define pop
   $(wordlist 1, $(shell echo $$(($(words $(1)) - 1))), $(1))
 endef
 
+define require
+	@command -v $(1) >/dev/null 2>&1 || { \
+		echo >&2 ""; \
+		echo >&2 "*************************************************************************************"; \
+		echo >&2 "** ERROR - Missing required tool: $(1)"; \
+		echo >&2 "** Get it here: $(2)"; \
+		echo >&2 "**"; \
+		echo >&2 "** Alternatively, consider Defoogi for builds: https://github.com/FozzTexx/defoogi"; \
+		echo >&2 "*************************************************************************************"; \
+		echo >&2 ""; \
+		exit 1; \
+	}
+endef
+
 # Automatically figure out PLATFORM from the .mk file that included us
 PLATFORM_MK := $(call pop,$(MAKEFILE_LIST))
 PLATFORM := $(basename $(notdir $(lastword $(PLATFORM_MK))))

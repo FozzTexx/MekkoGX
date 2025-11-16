@@ -31,14 +31,3 @@ ifdef FUJINET_LIB_DIR
   LIBS = $(call library-dir-flag,$(FUJINET_LIB_DIR)) $(call library-flag,$(FUJINET_LIB_LDLIB))
 endif
 
-define require
-	@command -v $(1) >/dev/null 2>&1 || { \
-		echo >&2 ""; \
-		echo >&2 "*********************************************************************************"; \
-		echo >&2 "** ERROR - Missing required tool: $(1)"; \
-		echo >&2 "** Get it here: $(2)"; \
-		echo >&2 "*********************************************************************************"; \
-		echo >&2 ""; \
-		exit 1; \
-	}
-endef
