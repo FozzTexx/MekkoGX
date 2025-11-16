@@ -26,6 +26,7 @@ ASFLAGS += $(foreach incdir,$(EXTRA_INCLUDE_$(TOOLCHAIN_UC)),$(call asm-include-
 
 ifdef FUJINET_LIB_INCLUDE
   CFLAGS += $(call include-dir-flag,$(FUJINET_LIB_INCLUDE))
+  ASFLAGS += $(call asm-include-dir-flag,$(FUJINET_LIB_INCLUDE))
 endif
 ifdef FUJINET_LIB_DIR
   LIBS = $(call library-dir-flag,$(FUJINET_LIB_DIR)) $(call library-flag,$(FUJINET_LIB_LDLIB))

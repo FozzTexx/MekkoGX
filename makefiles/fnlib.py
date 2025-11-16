@@ -326,7 +326,7 @@ class LibLocator:
         return
     if self.skipIfMissing:
       exit(0)
-    raise ValueError("Unable to find include directory", self.MV.FUJINET_LIB_DIR)
+    error_exit("Unable to find include directory", self.MV.FUJINET_LIB_DIR)
     return
 
   def printMakeVariables(self):
