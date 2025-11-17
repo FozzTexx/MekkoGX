@@ -36,9 +36,13 @@ define link-bin
 endef
 
 define compile
-  $(CC) -l $(basename $1).lst --create-dep $(OBJ_DIR)/$(basename $(notdir $2)).d -c $(CFLAGS) -t $(PLATFORM) -o $1 $2
+  $(CC) -l $(basename $1).lst \
+        --create-dep $(basename $1).d \
+        -c $(CFLAGS) -t $(PLATFORM) -o $1 $2
 endef
 
 define assemble
-  $(AS) -l $(basename $1).lst -c $(ASFLAGS) -t $(PLATFORM) -o $1 $2
+  $(AS) -l $(basename $1).lst \
+        --create-dep $(basename $1).d \
+        -c $(ASFLAGS) -t $(PLATFORM) -o $1 $2
 endef

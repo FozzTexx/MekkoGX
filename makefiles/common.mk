@@ -176,7 +176,8 @@ $(PLATFORM)/library-post::
 	@:
 
 # include autodeps
--include $(wildcard $(OBJ_DIR)/*.d)
+DEPS := $(OBJS:.o=.d)
+-include $(DEPS)
 
 FUJINET_LIB ?= __UNDEFINED__
 ifeq ($(FUJINET_LIB),__UNDEFINED__)

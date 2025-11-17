@@ -301,7 +301,7 @@ class LibLocator:
     return
 
   def findLibraryDir(self, baseDir):
-    dirsToCheck = ["build", *[f"r2r/{p}" for p in self.possiblePlatforms]]
+    dirsToCheck = ["", "build", *[f"r2r/{p}" for p in self.possiblePlatforms]]
     for pdir in dirsToCheck:
       pdir = os.path.join(baseDir, pdir)
       if os.path.isdir(pdir):
