@@ -38,7 +38,7 @@ define link-bin
 endef
 
 define compile
-  $(CC) $(CFLAGS) -ad=$(OBJ_DIR)/$(basename $(notdir $2)).d -fo=$1 $2
+  $(CC) $(CFLAGS) -ad=$(1:.o=.d).d -fo=$1 $2
 endef
 
 define assemble
