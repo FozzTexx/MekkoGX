@@ -42,5 +42,5 @@ define compile
 endef
 
 define assemble
-  $(AS) -c $(ASFLAGS) -o $1 $2 2>&1
+  $(AS) -c $(ASFLAGS) -fo=$1 $2 2>&1
 endef
