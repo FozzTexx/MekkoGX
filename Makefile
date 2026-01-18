@@ -1,5 +1,5 @@
 PRODUCT = hello
-PLATFORMS = coco apple2 atari c64 adam msdos msxrom
+PLATFORMS = coco apple2 atari c64 adam msdos msxrom adam-cpm
 
 # You can run 'make <platform>' to build for a specific platform,
 # or 'make <platform>/<target>' for a platform-specific target.
@@ -26,7 +26,8 @@ PLATFORM_COMBOS = \
   c64+=commodore \
   atarixe+=atari \
   msxrom+=msx \
-  msxdos+=msx
+  msxdos+=msx \
+  adam-cpm+=adam
 
 include makefiles/toplevel-rules.mk
 
