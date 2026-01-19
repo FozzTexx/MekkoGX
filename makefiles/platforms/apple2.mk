@@ -9,7 +9,7 @@ MWD := $(realpath $(dir $(lastword $(MAKEFILE_LIST)))..)
 include $(MWD)/common.mk
 include $(MWD)/toolchains/cc65.mk
 
-r2r:: $(BUILD_DISK) $(BUILD_LIB) $(R2R_EXTRA_DEPS_$(PLATFORM_UC))
+r2r:: $(BUILD_DISK) $(BUILD_LIB) $(R2R_EXTRA_DEPS)
 	make -f $(PLATFORM_MK) $(PLATFORM)/r2r-post
 
 PRODOS_VERSION = 2.4.3
@@ -17,7 +17,7 @@ PRODOS8_DISK ?= $(CACHE_PLATFORM)/PRODOS8-$(PRODOS_VERSION).po
 CC65_UTILS_DIR := $(shell cl65 --print-target-path --target $(PLATFORM))/$(PLATFORM)/util
 LOADER_SYSTEM := loader.system
 
-$(BUILD_DISK): $(BUILD_EXEC) $(PRODOS8_DISK) $(DISK_EXTRA_DEPS_$(PLATFORM_UC)) | $(R2R_PD)
+$(BUILD_DISK): $(BUILD_EXEC) $(PRODOS8_DISK) $(DISK_EXTRA_DEPS) | $(R2R_PD)
 	$(call require,$(DISK_TOOL),$(DISK_TOOL_INFO))
 	$(call require,$(DISK_TOOL_X),$(DISK_TOOL_INFO))
 	$(DISK_TOOL_X) create -d $@ --format $(PRODOS8_DISK) --prodos --size=140kb --name=$(PRODUCT_BASE)

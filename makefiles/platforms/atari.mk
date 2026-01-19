@@ -8,13 +8,13 @@ MWD := $(realpath $(dir $(lastword $(MAKEFILE_LIST)))..)
 include $(MWD)/common.mk
 include $(MWD)/toolchains/cc65.mk
 
-r2r:: $(BUILD_DISK) $(BUILD_LIB) $(R2R_EXTRA_DEPS_$(PLATFORM_UC))
+r2r:: $(BUILD_DISK) $(BUILD_LIB) $(R2R_EXTRA_DEPS)
 	make -f $(PLATFORM_MK) $(PLATFORM)/r2r-post
 
 PICOBOOT_BIN = picoboot.bin
 ATRBOOT := $(CACHE_PLATFORM)/$(PICOBOOT_BIN)
 
-$(BUILD_DISK): $(BUILD_EXEC) $(ATRBOOT) $(DISK_EXTRA_DEPS_$(PLATFORM_UC)) | $(R2R_PD)
+$(BUILD_DISK): $(BUILD_EXEC) $(ATRBOOT) $(DISK_EXTRA_DEPS) | $(R2R_PD)
 	$(RM) $@
 	$(RM) -rf $(CACHE_PLATFORM)/disk
 	$(MKDIR_P) $(CACHE_PLATFORM)/disk

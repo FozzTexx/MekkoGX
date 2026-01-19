@@ -13,10 +13,10 @@ include $(MWD)/toolchains/ow2.mk
 
 CFLAGS += -D__MSDOS__
 
-r2r:: $(BUILD_DISK) $(BUILD_EXEC) $(BUILD_LIB) $(R2R_EXTRA_DEPS_$(PLATFORM_UC))
+r2r:: $(BUILD_DISK) $(BUILD_EXEC) $(BUILD_LIB) $(R2R_EXTRA_DEPS)
 	make -f $(PLATFORM_MK) $(PLATFORM)/r2r-post
 
-$(BUILD_DISK): $(BUILD_EXEC) | $(R2R_PD)
+$(BUILD_DISK): $(BUILD_EXEC) $(DISK_EXTRA_DEPS) | $(R2R_PD)
 	$(RM) $@
 	$(RM) -rf $(CACHE_PLATFORM)/disk
 	$(MKDIR_P) $(CACHE_PLATFORM)/disk

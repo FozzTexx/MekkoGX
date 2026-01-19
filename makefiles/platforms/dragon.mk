@@ -8,10 +8,10 @@ MWD := $(realpath $(dir $(lastword $(MAKEFILE_LIST)))..)
 include $(MWD)/common.mk
 include $(MWD)/toolchains/cmoc.mk
 
-r2r:: $(BUILD_DISK) $(BUILD_LIB) $(R2R_EXTRA_DEPS_$(PLATFORM_UC))
+r2r:: $(BUILD_DISK) $(BUILD_LIB) $(R2R_EXTRA_DEPS)
 	@make -f $(PLATFORM_MK) $(PLATFORM)/r2r-post
 
-$(BUILD_DISK): $(BUILD_EXEC) $(DISK_EXTRA_DEPS_$(PLATFORM_UC)) | $(R2R_PD)
+$(BUILD_DISK): $(BUILD_EXEC) $(DISK_EXTRA_DEPS) | $(R2R_PD)
 	$(RM) $@
 	$(call require,$(DISK_TOOL),$(DISK_TOOL_INFO))
 	$(DISK_TOOL) new $@ 360
