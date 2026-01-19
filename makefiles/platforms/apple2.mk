@@ -17,12 +17,13 @@ PRODOS8_DISK ?= $(CACHE_PLATFORM)/PRODOS8-$(PRODOS_VERSION).po
 CC65_UTILS_DIR := $(shell cl65 --print-target-path --target $(PLATFORM))/$(PLATFORM)/util
 LOADER_SYSTEM := loader.system
 
-$(BUILD_DISK): $(BUILD_EXEC) $(PRODOS8_DISK) $(DISK_EXTRA_DEPS) | $(R2R_PD)
+$(BUILD_DISK): $(BUILD_EXEC) $(PRODOS8_DISK) $(DISK_EXTRA_DEPS) $(DISK_EXTRA_FILES) | $(R2R_PD)
 	$(call require,$(DISK_TOOL),$(DISK_TOOL_INFO))
 	$(call require,$(DISK_TOOL_X),$(DISK_TOOL_INFO))
 	$(DISK_TOOL_X) create -d $@ --format $(PRODOS8_DISK) --prodos --size=140kb --name=$(PRODUCT_BASE)
-	$(DISK_TOOL) -as $@ $(PRODUCT_BASE) < $<
-	$(DISK_TOOL) -p $@ $(PRODUCT_BASE).SYSTEM SYS 0x2000 < $(CC65_UTILS_DIR)/$(LOADER_SYSTEM)
+	$(call copy-to-disk,-as,$<,$(PRODUCT_BASE),$@)
+	$(call copy-to-disk,-p,$(CC65_UTILS_DIR)/$(LOADER_SYSTEM),$(PRODUCT_BASE).SYSTEM SYS 0x2000,$@)
+	$(foreach f,$(DISK_EXTRA_FILES),$(call copy-to-disk,-ptx,$(f),$(notdir $(f)),$@);)
 	make -f $(PLATFORM_MK) $(PLATFORM)/disk-post
 
 # Download and cache ProDOS disk if necessary
@@ -45,3 +46,12 @@ $(EXECUTABLE_AD): $(BUILD_EXEC)
 	else \
 	  cp $< $@ ; \
 	fi
+
+# Arguments:
+# $1 == DISK_TOOL flags
+# $2 == source file
+# $3 == destination name
+# $4 == disk image
+define copy-to-disk
+    $(DISK_TOOL) $1 $4 $3 < $2
+endef
