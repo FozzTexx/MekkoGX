@@ -29,7 +29,7 @@ PLATFORM_COMBOS = \
   msxdos+=msx \
   adam_cpm+=adam
 
-include makefiles/toplevel-rules.mk
+include mekkogx/toplevel-rules.mk
 
 # If you need to add extra platform-specific steps, do it below:
 #   coco/r2r:: coco/custom-step1
