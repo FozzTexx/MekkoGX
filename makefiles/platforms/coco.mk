@@ -15,7 +15,7 @@ $(BUILD_DISK): $(BUILD_EXEC) $(DISK_EXTRA_DEPS) $(DISK_EXTRA_FILES) | $(R2R_PD)
 	$(RM) $@
 	$(call require,$(DISK_TOOL),$(DISK_TOOL_INFO))
 	$(DISK_TOOL) dskini $@
-	$(call copy-to-disk,-b -2,$<,$(shell echo $(PRODUCT_BASE).BIN | tr '[:lower:]' '[:upper:]'),$@)
+	$(call copy-to-disk,-b -2,$<,$(shell echo $(notdir $<) | tr '[:lower:]' '[:upper:]'),$@)
 	$(foreach f,$(DISK_EXTRA_FILES),$(call copy-to-disk,-b,$(f),$(shell echo $(notdir $(f)) | tr '[:lower:]' '[:upper:]'),$@);)
 	@make -f $(PLATFORM_MK) $(PLATFORM)/disk-post
 
