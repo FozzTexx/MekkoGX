@@ -22,7 +22,7 @@ PLATFORM := $(basename $(notdir $(lastword $(PLATFORM_MK))))
 PLATFORM_UC := $(shell echo "$(PLATFORM)" | tr '[:lower:]' '[:upper:]')
 $(info Building for PLATFORM=$(PLATFORM))
 
-include $(PWD)/Makefile
+include $(CURDIR)/Makefile
 
 # Define GIT_VERSION to be used in macro define to CFLAGS, includes
 # tag if available, short commit hash, appends '*' if changes haven't

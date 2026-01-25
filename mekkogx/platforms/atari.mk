@@ -15,16 +15,17 @@ r2r:: $(BUILD_DISK) $(BUILD_LIB) $(R2R_EXTRA_DEPS)
 
 PICOBOOT_BIN = picoboot.bin
 ATRBOOT := $(CACHE_PLATFORM)/$(PICOBOOT_BIN)
+DISK_TOOL_FLAGS_ATARI ?= -S -m -B $(ATRBOOT)
 
 $(BUILD_DISK): $(BUILD_EXEC) $(ATRBOOT) $(DISK_EXTRA_DEPS) $(DISK_EXTRA_FILES) | $(R2R_PD)
 	$(RM) $@
 	$(RM) -rf $(CACHE_PLATFORM)/disk
 	$(MKDIR_P) $(CACHE_PLATFORM)/disk
-	cp $< $(CACHE_PLATFORM)/disk
+	cp $< $(CACHE_PLATFORM)/disk/$(EXEC_NAME_ATARI)
 	$(call require,$(DISK_TOOL),$(DISK_TOOL_INFO))
 	$(call require,$(DISK_TOOL_COPY),$(DISK_TOOL_COPY_INFO))
-	$(DISK_TOOL) -m -S -B $(ATRBOOT) $@ $(CACHE_PLATFORM)/disk
-	$(foreach f,$(DISK_EXTRA_FILES),$(call copy-to-disk,,$(f),$(notdir $(f)),$@);)
+	$(foreach f,$(DISK_EXTRA_FILES),cp $(f) $(CACHE_PLATFORM)/disk ; )
+	$(DISK_TOOL) $(DISK_TOOL_FLAGS_ATARI) $@ $(CACHE_PLATFORM)/disk
 	make -f $(PLATFORM_MK) $(PLATFORM)/disk-post
 
 PICOBOOT_DOWNLOAD_URL = https://github.com/FujiNetWIFI/assets/releases/download/picobin
