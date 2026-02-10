@@ -38,7 +38,7 @@ define link-bin
     disable 1014 \
     name $1 \
     file {$2} \
-$(if $(filter __UNDEFINED__,$(FUJINET_LIB)),,$(space) library {$(LIBS)} \)
+$(if $(filter __UNDEFINED__,$(FUJINET_LIB)),,$(space) library {$(LIBS)} )
 endef
 
 define compile
