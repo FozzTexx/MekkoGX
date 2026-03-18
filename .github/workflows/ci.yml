@@ -14,12 +14,13 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          # - adam
-          # - apple2
-          # - atari
-          # - c64
+          - adam
+          - apple2
+          - atari
+          - c64
           - coco
-          # - msdos
+          - msdos
+          - msxdos
 
     container:
       image: fozztexx/defoogi:1.4.2
