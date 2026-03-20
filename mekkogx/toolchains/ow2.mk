@@ -5,7 +5,7 @@ AR_DEFAULT ?= wlib
 
 include $(MWD)/tc-common.mk
 
-CFLAGS += -0 -bt=dos -ms -s -osh -zu -fr=$(basename $@).err
+CFLAGS += -0 -bt=dos -fr=$(basename $@).err
 ASFLAGS +=
 LDFLAGS += SYSTEM dos
 ifneq ($(FUJINET_LIB),__UNDEFINED__)

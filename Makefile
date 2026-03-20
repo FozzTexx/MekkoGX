@@ -1,5 +1,12 @@
 PRODUCT = hello
-PLATFORMS = coco apple2 atari c64 adam msdos msxrom adam_cpm
+PLATFORMS += adam
+PLATFORMS += adam_cpm
+PLATFORMS += apple2
+PLATFORMS += atari
+PLATFORMS += c64
+PLATFORMS += coco
+PLATFORMS += msdos
+PLATFORMS += msxrom
 
 # You can run 'make <platform>' to build for a specific platform,
 # or 'make <platform>/<target>' for a platform-specific target.
