@@ -25,7 +25,16 @@ SRC_DIRS = src src/%PLATFORM%
 # - a URL to a git repo
 # - empty which will use whatever is the latest
 # - undefined, no fujinet-lib will be used
-FUJINET_LIB = 
+FUJINET_LIB =
+
+# HIRESTXT_LIB can be
+# - a version number such as 0.5.0.2
+# - a directory which contains the built library
+# - a URL to a git repo
+# - empty which will use whatever is the latest
+# - undefined, no hirestxt-mod will be used
+# Only used for coco/dragon builds.
+#HIRESTXT_LIB =
 
 # Define extra dirs ("combos") that expand with a platform.
 # Format: platform+=combo1,combo2

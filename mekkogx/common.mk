@@ -212,3 +212,15 @@ else
     endif
   endif
 endif # FUJINET_LIB
+
+HIRESTXT_LIB ?= __UNDEFINED__
+ifeq ($(HIRESTXT_LIB),__UNDEFINED__)
+  $(info HIRESTXT_LIB not defined)
+else
+  ifneq ($(filter coco dragon,$(PLATFORM)),)
+    $(eval $(subst |,$(_newline),$(shell PLATFORM=$(PLATFORM) CACHE_DIR=$(CACHE_DIR) \
+        $(MWD)/hirestxtlib.py $(HIRESTXT_LIB) | tr '\n' '|')))
+  else
+    $(info HIRESTXT_LIB ignored for PLATFORM=$(PLATFORM) (coco/dragon only))
+  endif
+endif # HIRESTXT_LIB
