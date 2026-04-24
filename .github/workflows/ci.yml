@@ -15,7 +15,7 @@ jobs:
       matrix:
         platform:
           - adam
-	  - adam_cpm
+          - adam_cpm
           - apple2
           - atari
           - c64
