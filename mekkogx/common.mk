@@ -65,8 +65,14 @@ MKDIR_P ?= mkdir -p
 #   c64+=commodore,eightbit -> c64 commodore eightbit
 # PLATFORM_COMBOS is a flat list of entries like "dragon+=coco"
 # $1 = the platform to expand
-get_combos = $(foreach e,$(PLATFORM_COMBOS),\
-  $(if $(filter $1+=%, $(e)), $(lastword $(subst +=, ,$(e)))))
+comma := ,
+define get_combos
+$(foreach e,$(PLATFORM_COMBOS), \
+  $(if $(filter $1+=%,$(e)), \
+    $(subst $(comma), ,$(lastword $(subst +=, ,$(e)))) \
+  ) \
+)
+endef
 
 # Expands patterns with %PLATFORM% to the platform + its combos
 expand_platform_pattern = \
