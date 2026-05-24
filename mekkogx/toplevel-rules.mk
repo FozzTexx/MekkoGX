@@ -19,7 +19,8 @@ clean::
 # Use % wildcard match to platform specific app so we don't have to
 # spell out every single platform variation
 $(R2R_DIR)/%/$(PRODUCT): FORCE
-	$(MAKE) -f $(MAKEFILE_DIR)/platforms/$*.mk r2r
+	$(MAKE) -f $(MAKEFILE_DIR)/platforms/$*.mk \
+	  $(if $(MEKKO_CONFIG),MEKKO_CONFIG=$(MEKKO_CONFIG)) r2r
 
 # Convenience: allow `make coco` (or apple2) as a shortcut
 $(PLATFORMS): %: $(R2R_DIR)/%/$(PRODUCT)
@@ -43,6 +44,7 @@ $(PLATFORMS): %: $(R2R_DIR)/%/$(PRODUCT)
 	@target="$@" ; case "$@" in \
 	  */*/*)   echo "No rule to make target '$@'"; exit 1;; \
 	  */*)     platform=$${target%/*}; target=$${target##*/}; \
-	           $(MAKE) -f $(MAKEFILE_DIR)/platforms/$${platform}.mk $${target} ;; \
+	           $(MAKE) -f $(MAKEFILE_DIR)/platforms/$${platform}.mk \
+	             $(if $(MEKKO_CONFIG),MEKKO_CONFIG=$(MEKKO_CONFIG)) $${target} ;; \
 	  *)       echo "No rule to make target '$@'"; exit 1;; \
 	esac

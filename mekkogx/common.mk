@@ -22,7 +22,9 @@ PLATFORM := $(basename $(notdir $(lastword $(PLATFORM_MK))))
 PLATFORM_UC := $(shell echo "$(PLATFORM)" | tr '[:lower:]' '[:upper:]')
 $(info Building for PLATFORM=$(PLATFORM))
 
-include $(CURDIR)/Makefile
+MEKKO_CONFIG ?= Makefile
+$(info MEKKO_CONFIG=$(MEKKO_CONFIG))
+include $(CURDIR)/$(MEKKO_CONFIG)
 
 # Define GIT_VERSION to be used in macro define to CFLAGS, includes
 # tag if available, short commit hash, appends '*' if changes haven't
