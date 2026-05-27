@@ -59,7 +59,7 @@ PC_DEFAULT = $(PC_$(TOOLCHAIN_UC))
 endif
 
 R2R_PD := $(R2R_DIR)/$(PLATFORM)
-OBJ_DIR := $(BUILD_DIR)/$(PRODUCT)$(PLATFORM)
+OBJ_DIR := $(BUILD_DIR)/$(PRODUCT)/$(PLATFORM)
 CACHE_PLATFORM := $(CACHE_DIR)/$(PLATFORM)
 MKDIR_P ?= mkdir -p
 
@@ -154,7 +154,7 @@ vpath %.s $(SRC_DIRS_EXPANDED)
 vpath %.asm $(SRC_DIRS_EXPANDED)
 vpath %.pas $(SRC_DIRS_EXPANDED)
 
-.PHONY: clean debug r2r $(PLATFORM)/r2r disk $(PLATFORM)/disk
+.PHONY: clean debug r2r $(PLATFORM)/r2r disk $(PLATFORM)/disk $(PLATFORM)/release
 
 clean::
 	rm -rf $(OBJ_DIR) $(CACHE_PLATFORM) $(R2R_PD)
@@ -172,6 +172,7 @@ debug::
 # The double-colon form appends without overwriting existing deps.
 r2r:: $(PLATFORM)/r2r
 disk:: $(PLATFORM)/disk
+release:: $(PLATFORM)/release
 
 # Fallback rule so every <platform>/disk-post target exists.
 # Does nothing by default (@:).
@@ -192,6 +193,16 @@ $(PLATFORM)/executable-post::
 # Same as $(PLATFORM)/disk-post above
 $(PLATFORM)/library-post::
 	@:
+
+RELEASE_INCLUDES ?= $(foreach dir,$(INCLUDE_DIRS),$(wildcard $(dir)/*.h $(dir)/*.inc))
+RELEASE_INCLUDES += $(wildcard Changelog.md)
+RELEASE_VERSION ?= $(shell git describe --tags --abbrev=0 2>/dev/null || echo dev)
+RELEASE_ZIP = $(RELEASE_DIR)/$(PRODUCT)-$(RELEASE_VERSION)-$(PLATFORM).zip
+
+$(PLATFORM)/release: $(RELEASE_ZIP)
+$(RELEASE_ZIP):: $(LIBRARY)
+	$(MKDIR_P) $(RELEASE_DIR)
+	zip -j $@ $(RELEASE_INCLUDES) $(BUILD_LIB)
 
 # include autodeps
 DEPS := $(OBJS:.o=.d)
@@ -214,7 +225,7 @@ else
         $(FUJINET_LIB) | tr '\n' '|')))
   ifeq ($(strip $(FUJINET_LIB_LDLIB)),)
     ifeq ($(FUJINET_LIB_OPTIONAL),)
-      $(error fujinet-lib not available)
+      $(error fujinet-lib not available for $(PLATFORM))
     else
       $(info fujinet-lib not available, but skipping because FUJINET_LIB_SKIP_MISSING is set)
     endif
