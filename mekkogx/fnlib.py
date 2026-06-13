@@ -350,7 +350,7 @@ class LibLocator:
       vers = self.MV.FUJINET_LIB_VERSION
       if vers[0] != 'v':
         vers = "v" + vers
-      flags['FNLIB_VERSION_FULL'] = vers
+      flags['FNLIB_VERSION_FULL'] = f"'\"{vers}\"'"
     if flags:
       fmt_flags = " ".join(f"-D{name}={val}" for name, val in flags.items())
       print(f"CFLAGS_EXTRA_{self.PLATFORM.upper()}+={fmt_flags}")
