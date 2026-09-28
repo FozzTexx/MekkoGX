@@ -28,11 +28,14 @@ SRC_DIRS = src src/%PLATFORM%
 FUJINET_LIB =
 
 # HIRESTXT_LIB can be
-# - a version number such as 0.5.0.2
+# - a version number such as 0.5.1.7
 # - a directory which contains the built library
 # - a URL to a git repo
 # - empty which will use whatever is the latest
 # - undefined, no hirestxt-mod will be used
+# Releases 0.5.1.7 and later default to no VT52; append +vt52 to get
+# it (e.g. 0.5.1.7+vt52, or vt52 alone for the latest). Older releases,
+# directories and git URLs always include it.
 # Only used for coco/dragon builds.
 #HIRESTXT_LIB =
 
