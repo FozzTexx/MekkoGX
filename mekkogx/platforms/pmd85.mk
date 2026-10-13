@@ -1,6 +1,5 @@
-EXEC_SUFFIX = .ptp
+EXEC_SUFFIX = .bin
 LIBRARY = $(R2R_PD)/$(PRODUCT_BASE).$(PLATFORM).lib
-AS_DEFAULT = zcc
 
 MWD := $(realpath $(dir $(lastword $(MAKEFILE_LIST)))..)
 include $(MWD)/common.mk
