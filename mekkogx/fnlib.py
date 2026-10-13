@@ -400,7 +400,8 @@ def main():
     FUJINET_CACHE_DIR = os.path.join(CACHE_DIR, os.path.basename(FUJINET_CACHE_DIR))
 
   fujinetLib = LibLocator(FUJINET_LIB, PLATFORM, PLATFORM_COMBOS, args.skip_if_missing)
-  fujinetLib.MV.FUJINET_LIB_VERSION = "v" + fujinetLib.MV.FUJINET_LIB_VERSION
+  if fujinetLib.MV.FUJINET_LIB_VERSION:
+    fujinetLib.MV.FUJINET_LIB_VERSION = "v" + fujinetLib.MV.FUJINET_LIB_VERSION
   fujinetLib.printMakeVariables()
 
   return
