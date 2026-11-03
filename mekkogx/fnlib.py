@@ -121,10 +121,8 @@ class LibLocator:
     if not self.MV.FUJINET_LIB_FILE:
       if not self.MV.FUJINET_LIB_ZIP or not os.path.exists(self.MV.FUJINET_LIB_ZIP):
         self.downloadZip()
-      # downloadZip() leaves no zip when the library is already in the cache
-      if self.MV.FUJINET_LIB_ZIP and os.path.exists(self.MV.FUJINET_LIB_ZIP):
-        with zipfile.ZipFile(self.MV.FUJINET_LIB_ZIP, "r") as zf:
-          zf.extractall(self.MV.FUJINET_LIB_DIR)
+      with zipfile.ZipFile(self.MV.FUJINET_LIB_ZIP, "r") as zf:
+        zf.extractall(self.MV.FUJINET_LIB_DIR)
 
     if not self.MV.FUJINET_LIB_INCLUDE:
       self.getInclude()
@@ -367,7 +365,16 @@ class LibLocator:
       if platform not in comboDict:
         comboDict[platform] = []
       comboDict[platform].extend(others)
-    return comboDict
+
+    # Combos cascade: "h89-cpm+=h89 h89+=fujiversal" gives h89-cpm both.
+    def expand(platform, found):
+      for c in comboDict.get(platform, []):
+        if c not in found:
+          found.append(c)
+          expand(c, found)
+      return found
+
+    return {p: [c for c in expand(p, [p]) if c != p] for p in comboDict}
 
 # Print errors to stderr so that `make` doesn't try to interpret them in `$(eval)`
 def error_exit(*args):
@@ -402,10 +409,7 @@ def main():
     FUJINET_CACHE_DIR = os.path.join(CACHE_DIR, os.path.basename(FUJINET_CACHE_DIR))
 
   fujinetLib = LibLocator(FUJINET_LIB, PLATFORM, PLATFORM_COMBOS, args.skip_if_missing)
-  # fujinet-version.h defines FNLIB_VERSION_FULL itself
-  if os.path.exists(os.path.join(fujinetLib.MV.FUJINET_LIB_INCLUDE, "fujinet-version.h")):
-    fujinetLib.MV.FUJINET_LIB_VERSION = ""
-  elif fujinetLib.MV.FUJINET_LIB_VERSION:
+  if fujinetLib.MV.FUJINET_LIB_VERSION:
     fujinetLib.MV.FUJINET_LIB_VERSION = "v" + fujinetLib.MV.FUJINET_LIB_VERSION
   fujinetLib.printMakeVariables()
 
