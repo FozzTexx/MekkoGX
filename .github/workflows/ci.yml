@@ -21,7 +21,7 @@ jobs:
           - c64
           - coco
           - msdos
-          - msxdos
+          - msxrom
 
     container:
       image: fozztexx/defoogi:1.4.7
