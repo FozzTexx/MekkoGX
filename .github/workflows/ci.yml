@@ -42,6 +42,9 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: build
+    # Only publish binaries for pushes to main, and never on the template
+    # repo itself. Repos created from this template will release normally.
+    if: github.event_name == 'push' && github.repository != 'FozzTexx/MekkoGX'
     steps:
       - uses: actions/checkout@v4
 
