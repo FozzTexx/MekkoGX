@@ -4,14 +4,12 @@ import os, sys
 import re
 import tarfile
 import urllib.request
-import json
 import subprocess
 
 sys.path.insert(0, os.path.dirname(__file__))
 from fnlib import MakeVariables, error_exit
 
 HIRESTXT_REPO = "RichStephens/hirestxt-mod"
-GITHUB_API = "https://api.github.com/repos"
 GITHUB_URL = "https://github.com"
 CACHE_DIR = "_cache"
 HIRESTXT_CACHE_DIR = os.path.join(CACHE_DIR, "hirestxt-mod")
@@ -88,11 +86,10 @@ class HirestxtLocator:
     return False
 
   def getLatestVersion(self):
-    latest_url = f"{GITHUB_API}/{HIRESTXT_REPO}/releases/latest"
+    latest_url = f"{GITHUB_URL}/{HIRESTXT_REPO}/releases/latest"
     with urllib.request.urlopen(latest_url) as response:
-      release_info = json.loads(response.read().decode("UTF-8"))
+      latest_version = response.geturl().rsplit("/", 1)[-1]
 
-    latest_version = release_info.get("tag_name") or release_info.get("name")
     if not latest_version:
       error_exit("Can't find latest hirestxt-mod version")
 
