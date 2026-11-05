@@ -4,11 +4,9 @@ import os, sys
 import re
 import zipfile
 import urllib.request
-import json
 import subprocess
 
 FUJINET_REPO = "FujiNetWIFI/fujinet-lib"
-GITHUB_API = "https://api.github.com/repos"
 GITHUB_URL = "https://github.com"
 CACHE_DIR = "_cache"
 FUJINET_CACHE_DIR = os.path.join(CACHE_DIR, "fujinet-lib")
@@ -121,8 +119,10 @@ class LibLocator:
     if not self.MV.FUJINET_LIB_FILE:
       if not self.MV.FUJINET_LIB_ZIP or not os.path.exists(self.MV.FUJINET_LIB_ZIP):
         self.downloadZip()
-      with zipfile.ZipFile(self.MV.FUJINET_LIB_ZIP, "r") as zf:
-        zf.extractall(self.MV.FUJINET_LIB_DIR)
+      # downloadZip() leaves no zip when the library is already in the cache
+      if self.MV.FUJINET_LIB_ZIP and os.path.exists(self.MV.FUJINET_LIB_ZIP):
+        with zipfile.ZipFile(self.MV.FUJINET_LIB_ZIP, "r") as zf:
+          zf.extractall(self.MV.FUJINET_LIB_DIR)
 
     if not self.MV.FUJINET_LIB_INCLUDE:
       self.getInclude()
@@ -217,12 +217,10 @@ class LibLocator:
     if self.MV.FUJINET_LIB_VERSION:
       return
 
-    latest_url = f"{GITHUB_API}/{FUJINET_REPO}/releases/latest"
+    latest_url = f"{GITHUB_URL}/{FUJINET_REPO}/releases/latest"
     with urllib.request.urlopen(latest_url) as response:
-      response = response.read().decode("UTF-8")
-      release_info = json.loads(response)
+      latest_version = response.geturl().rsplit("/", 1)[-1]
 
-    latest_version = release_info.get("tag_name") or release_info.get("name")
     if not latest_version:
       raise ValueError("Can't find version")
 
@@ -409,7 +407,10 @@ def main():
     FUJINET_CACHE_DIR = os.path.join(CACHE_DIR, os.path.basename(FUJINET_CACHE_DIR))
 
   fujinetLib = LibLocator(FUJINET_LIB, PLATFORM, PLATFORM_COMBOS, args.skip_if_missing)
-  if fujinetLib.MV.FUJINET_LIB_VERSION:
+  # fujinet-version.h defines FNLIB_VERSION_FULL itself
+  if os.path.exists(os.path.join(fujinetLib.MV.FUJINET_LIB_INCLUDE, "fujinet-version.h")):
+    fujinetLib.MV.FUJINET_LIB_VERSION = ""
+  elif fujinetLib.MV.FUJINET_LIB_VERSION:
     fujinetLib.MV.FUJINET_LIB_VERSION = "v" + fujinetLib.MV.FUJINET_LIB_VERSION
   fujinetLib.printMakeVariables()
 
