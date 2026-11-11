@@ -257,7 +257,7 @@ $(PLATFORM)/executable-post::
 $(PLATFORM)/library-post::
 	@:
 
-RELEASE_INCLUDES ?= $(foreach dir,$(INCLUDE_DIRS),$(wildcard $(dir)/*.h $(dir)/*.inc))
+RELEASE_INCLUDES ?= $(foreach dir,$(INCLUDE_DIRS_EXPANDED),$(wildcard $(dir)/*.h $(dir)/*.inc))
 RELEASE_INCLUDES += $(wildcard Changelog.md)
 RELEASE_VERSION ?= $(shell git describe --tags --abbrev=0 2>/dev/null || echo dev)
 PRODUCT_DASH = $(subst .,-,$(PRODUCT))
