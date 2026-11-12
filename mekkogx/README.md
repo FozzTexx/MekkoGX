@@ -203,6 +203,10 @@ Notes:
   put it back.
 * Platforms that have no disk image simply build every binary into
   `r2r/<platform>/`.
+* The C64 builds only `.prg` files unless `DISK_TYPE_C64` is `d64`,
+  `d71` or `d81`, which also puts them on a disk image made with cc1541.
+  `DISK_BOOT_C64` names a program to write first, a menu say, so that a
+  `LOAD"*",8,1` boot runs it.
 * If a product needs a completely different set of sources rather than
   extra ones, leave the shared `SRC_DIRS` unset and give every product
   its own.
